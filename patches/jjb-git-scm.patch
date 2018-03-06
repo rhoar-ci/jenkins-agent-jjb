@@ -1,0 +1,31 @@
+--- /usr/lib/python2.7/site-packages/jenkins_jobs/modules/scm.py
++++ /usr/lib/python2.7/site-packages/jenkins_jobs/modules/scm.py
+@@ -171,6 +171,8 @@ def git(registry, xml_parent, data):
+         * **shallow-clone** (`bool`) - Perform shallow clone (default false)
+         * **do-not-fetch-tags** (`bool`) - Perform a clone without tags
+             (default false)
++        * **honor-refspec** (`bool`) - Perform initial clone using the refspec
++            defined for the repository (default false)
+         * **sparse-checkout** (`dict`)
+             * **paths** (`list`) - List of paths to sparse checkout. (optional)
+         * **submodule** (`dict`)
+@@ -377,7 +379,8 @@ def git(registry, xml_parent, data):
+     clone_options = (
+         "shallow-clone",
+         "timeout",
+-        "do-not-fetch-tags"
++        "do-not-fetch-tags",
++        "honor-refspec"
+     )
+     if any(key in data for key in clone_options):
+         clo = XML.SubElement(exts_node, impl_prefix + 'CloneOption')
+@@ -388,6 +391,9 @@ def git(registry, xml_parent, data):
+                 data.get('do-not-fetch-tags', False)).lower()
+         if 'timeout' in data:
+             XML.SubElement(clo, 'timeout').text = str(data['timeout'])
++        if 'honor-refspec' in data:
++            XML.SubElement(clo, 'honorRefspec').text = str(
++                data.get('honor-refspec', False)).lower()
+     if 'sparse-checkout' in data:
+         ext_name = impl_prefix + 'SparseCheckoutPaths'
+         ext = XML.SubElement(exts_node, ext_name)

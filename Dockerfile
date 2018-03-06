@@ -3,11 +3,14 @@ MAINTAINER Ladislav Thon <lthon@redhat.com>
 
 USER root
 
+COPY patches /tmp/patches/
+
 RUN yum -y install epel-release && \
-    yum -y install python-pip && \
+    yum -y install python-pip patch && \
     yum clean all -y && \
     pip install --upgrade pip six 'jenkins-job-builder>=2.0.0' && \
-    sed -i "s/return b'Basic ' + base64.b64encode(auth)/return (b'Basic ' + base64.b64encode(auth)) if username != 'ignored' else (b'Bearer ' + password)/" /usr/lib/python2.7/site-packages/jenkins/__init__.py
+    for P in /tmp/patches/*.patch ; do patch --directory / --strip 0 < $P ; done && \
+    rm -rf /tmp/patches
 
 COPY jenkins_jobs.ini /etc/jenkins_jobs/
 COPY jjb /usr/local/bin/
