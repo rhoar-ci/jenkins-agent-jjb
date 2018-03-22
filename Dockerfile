@@ -6,7 +6,7 @@ USER root
 COPY patches /tmp/patches/
 
 RUN yum -y install epel-release && \
-    yum -y install python-pip patch && \
+    yum -y install jq patch python-pip && \
     yum clean all -y && \
     pip install --upgrade pip six 'jenkins-job-builder>=2.0.0' && \
     for P in /tmp/patches/*.patch ; do patch --directory / --strip 0 < $P ; done && \
