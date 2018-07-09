@@ -1,7 +1,7 @@
 --- /usr/lib/python2.7/site-packages/jenkins_jobs/modules/scm.py
 +++ /usr/lib/python2.7/site-packages/jenkins_jobs/modules/scm.py
-@@ -171,6 +171,8 @@ def git(registry, xml_parent, data):
-         * **shallow-clone** (`bool`) - Perform shallow clone (default false)
+@@ -172,6 +172,8 @@ def git(registry, xml_parent, data):
+         * **depth** (`int`) - Set shallow clone depth (default 1)
          * **do-not-fetch-tags** (`bool`) - Perform a clone without tags
              (default false)
 +        * **honor-refspec** (`bool`) - Perform initial clone using the refspec
@@ -9,7 +9,7 @@
          * **sparse-checkout** (`dict`)
              * **paths** (`list`) - List of paths to sparse checkout. (optional)
          * **submodule** (`dict`)
-@@ -377,7 +379,8 @@ def git(registry, xml_parent, data):
+@@ -378,7 +380,8 @@ def git(registry, xml_parent, data):
      clone_options = (
          "shallow-clone",
          "timeout",
@@ -19,7 +19,7 @@
      )
      if any(key in data for key in clone_options):
          clo = XML.SubElement(exts_node, impl_prefix + 'CloneOption')
-@@ -388,6 +391,9 @@ def git(registry, xml_parent, data):
+@@ -391,6 +394,9 @@ def git(registry, xml_parent, data):
                  data.get('do-not-fetch-tags', False)).lower()
          if 'timeout' in data:
              XML.SubElement(clo, 'timeout').text = str(data['timeout'])
